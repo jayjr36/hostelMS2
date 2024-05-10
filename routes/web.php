@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HostelController;
 use App\Http\Controllers\BookingController;
 
-Route::get('/', function () {
+Route::get('/admin', function () {
     return view('admin');
 });
 
@@ -13,13 +13,14 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('user.register');
 
-Route::get('/login', function () {
+Route::get('/', function () {
     return view('auth.login');
 })->name('user.login');
 
 Route::get('/landing', function () {
     return view('landing');
 })->name('landing.page');
+
 Route::post('/add-hostel', [HostelController::class, 'store'])->name('hostels.store');
 Route::get('/hostels', [HostelController::class, 'index'])->name('hostels.index');
 Route::get('/hostels/{id}', [HostelController::class, 'show'])->name('hostels.show');

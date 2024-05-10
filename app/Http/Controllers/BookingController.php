@@ -38,27 +38,39 @@ class BookingController extends Controller
     }
 
     public function makePayment(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        $paymentAmount = $request->input('payment_amount');
-        $balance = $booking->price - $paymentAmount;
+{
+    $booking = Booking::findOrFail($id);
+    $paymentAmount = $request->input('payment_amount');
     
-        if ($paymentAmount <= 0) {
-            return redirect()->back()->with('error', 'Payment amount must be greater than 0!');
-        }
+    // Retrieve the current user's balance
+    $currentUser = auth()->user();
+    $userBalance = $currentUser->balance;
     
-        if ($balance < 0) {
-            return redirect()->back()->with('error', 'Insufficient funds!');
-        }
-    
-        if ($booking->price == $paymentAmount) {
-            $booking->payment_status = 'paid';
-        } else {
-            return redirect()->back()->with('error', 'Incomplete transaction');
-        }
-    
-        $booking->save();
-    
-        return redirect()->back()->with('success', 'Payment submitted successfully!');
+    if ($paymentAmount <= 0) {
+        return redirect()->back()->with('error', 'Payment amount must be greater than 0!');
     }
+
+    // Check if the user's balance is sufficient for the payment
+    if ($userBalance < $paymentAmount) {
+        return redirect()->back()->with('error', 'Insufficient funds!');
+    }
+
+    // Deduct the payment amount from the user's balance
+    $newBalance = $userBalance - $paymentAmount;
+    $currentUser->balance = $newBalance;
+    $currentUser->save();
+
+    // Update the booking's payment status
+    if ($booking->price == $paymentAmount) {
+        $booking->payment_status = 'paid';
+    } else {
+        return redirect()->back()->with('error', 'Incomplete transaction');
+    }
+
+    $booking->save();
+
+    return redirect()->back()->with('success', 'Payment submitted successfully!');
+}
+
+   
 }
