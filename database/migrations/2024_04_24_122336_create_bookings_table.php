@@ -13,16 +13,12 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('hostel_name');
-            $table->string('home_address');
-            $table->string('guardian_name');
-            $table->string('guardian_contact');
-            $table->string('relationship');
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->string('disability')->nullable();
             $table->enum('duration', ['semester', 'year']);
-            $table->integer('price');
-            $table->integer('room_number');
-            $table->string('payment_status')->default('not paid');
+            $table->string('room_number');
+            $table->string('hostel');
+            $table->string('control_number', 10)->unique();
             $table->timestamps();
         });
     }

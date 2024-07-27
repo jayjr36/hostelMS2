@@ -1,4 +1,59 @@
+<!-- resources/views/student/bookings/index.blade.php -->
+
 @extends('layout')
+
+@section('content')
+<div class="container">
+    <h3 class="text-center">Bookings</h3>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if ($bookings->isEmpty())
+        <p>You have no bookings yet.</p>
+    @else
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Room Number</th>
+                    <th>Disability</th>
+                    <th>Duration</th>
+                    <th>Control Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($bookings as $booking)
+                    <tr>
+                        <td>{{ $booking->id }}</td>
+                        <td>{{ $booking->room_number }}</td>
+                        <td>{{ $booking->disability }}</td>
+                        <td>{{ $booking->duration }}</td>
+                        <td>{{ $booking->control_number }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
+@endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{{-- @extends('layout')
 
 @section('content')
     <div class="container">
@@ -68,4 +123,4 @@
             @endforeach
         </div>
     </div>
-@endsection
+@endsection --}}

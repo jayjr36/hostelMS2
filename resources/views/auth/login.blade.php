@@ -1,12 +1,15 @@
 @extends('layout')
 
 @section('content')
-<div class="container-fluid bg-dark py-5" style="height: 100vh;">
+<div class="container-fluid py-5" style="background: linear-gradient(to bottom, #043f66, #f1c40f); height: 100vh;">
     <div class="row justify-content-center">
+        <div class="col-md-8 text-center mb-4">
+            <img src="{{ asset('dit.png') }}" alt="Logo" class="img-fluid" style="max-height: 150px;">
+        </div>
         <h2 class="text-center text-white">HOSTEL MANAGEMENT SYSTEM</h2>
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-header" style="background-color: #2980b9; color: white;">{{ __('Login') }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -24,8 +27,6 @@
                                 @enderror
                             </div>
                         </div>
-
-                       
 
                         <div class="row mb-3">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
@@ -55,7 +56,7 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" style="background-color: #2980b9; border-color: #2980b9;">
                                     {{ __('Login') }}
                                 </button>
                             </div>
@@ -63,7 +64,7 @@
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
                             @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    <a class="btn btn-link" href="{{ route('password.request') }}" style="color: #2980b9;">
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif
@@ -71,7 +72,7 @@
                         </div>
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <a class="btn btn-link" href="{{ route('register') }}">
+                                <a class="btn btn-link" href="{{ route('register') }}" style="color: #2980b9;">
                                     {{ __('Don\'t have an account?') }}
                                 </a>
                             </div>

@@ -18,7 +18,7 @@
                             <a class="nav-link text-white fs-5" href="{{ route('hostels.index') }}" target="iframe">Hostels</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white fs-5" href="{{ route('user.bookings') }}" target="iframe">Bookings</a>
+                            <a class="nav-link text-white fs-5" href="{{ route('student.bookings') }}" target="iframe">Bookings</a>
                         </li>
                         <li class="nav-item">
                             @auth
@@ -29,15 +29,6 @@
                             </form>
                         @endauth
                         </li>
-                        <li class="nav-item">
-                            
-                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                @if (auth()->check())
-                                <span class="text-white">{{ auth()->user()->balance }}Tshs</span>
-                            @endif
-                            </button>
-             
-                            </li>
                     </ul>
                    
               </div>

@@ -2,75 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    public function userBookings()
+    public function create()
     {
-        $userId = Auth::id();
-        $bookings = Booking::where('user_id', $userId)->get();
-        return view('booking', compact('bookings'));
+        return view('bookings.create');
     }
+
     public function store(Request $request)
     {
-        $userId = Auth::id();
-
-        $booking = new Booking();
-        $booking->user_id = $userId;
-        $booking->hostel_name = $request->hostel_name;
-        $booking->home_address = $request->homeAddress;
-        $booking->guardian_name = $request->guardianName;
-        $booking->guardian_contact = $request->guardianContact;
-        $booking->relationship = $request->relationship;
-        $booking->duration = $request->duration;
-        $booking->price = $request->price;
-        $booking->room_number = $request->roomNumber;
-
-        // Save the booking to the database
-        $booking->save();
-        
-        // Optionally, you can return a response indicating success or failure
-        return response()->json(['message' => 'Booking confirmed'], 200);
-    }
-
-    public function makePayment(Request $request, $id)
-{
-    $booking = Booking::findOrFail($id);
-    $paymentAmount = $request->input('payment_amount');
+        $request->validate([
+            'hostel' => 'required|string',
+            'reg_number' => 'required|exists:students,reg_number',
+            'disability' => 'nullable|string',
+            'duration' => 'required|in:semester,year',
+        ]);
     
-    // Retrieve the current user's balance
-    $currentUser = auth()->user();
-    $userBalance = $currentUser->balance;
+        $student = Student::where('reg_number', $request->reg_number)->first();
     
-    if ($paymentAmount <= 0) {
-        return redirect()->back()->with('error', 'Payment amount must be greater than 0!');
+        // Check gender and hostel block compatibility
+        $validHostelsForMale = ['block1', 'block3', 'block5'];
+        $validHostelsForFemale = ['block2', 'block4'];
+    
+        if (($student->gender == 'male' && !in_array($request->hostel, $validHostelsForMale)) ||
+            ($student->gender == 'female' && !in_array($request->hostel, $validHostelsForFemale))) {
+            return back()->withErrors(['hostel' => 'Selected hostel block is not allowed for your gender.']);
+        }
+    
+        $room_number = $this->assignRoom($student->gender);
+    
+        if (!$room_number) {
+            return back()->withErrors(['room' => 'No rooms available.']);
+        }
+    
+        $control_number = $this->generateControlNumber();
+    
+        Booking::create([
+            'student_id' => $student->id,
+            'disability' => $request->disability,
+            'duration' => $request->duration,
+            'room_number' => $room_number,
+            'hostel' =>$request->hostel,
+            'control_number' => $control_number,
+        ]);
+    
+        return redirect()->route('bookings.show', $control_number)->with('success', 'Room booked successfully.');
+    }    
+    
+    private function assignRoom($gender)
+    {
+          $allRooms = range(1, 100);
+    
+             shuffle($allRooms);
+    
+              foreach ($allRooms as $room) {
+            $currentOccupancy = Booking::where('room_number', $room)->count();
+            if ($currentOccupancy < 4) {
+                return $room;
+            }
+        }
+    
+              return false;
+    }
+    
+
+    private function generateControlNumber()
+    {
+        do {
+            $control_number = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
+        } while (Booking::where('control_number', $control_number)->exists());
+
+        return $control_number;
     }
 
-    // Check if the user's balance is sufficient for the payment
-    if ($userBalance < $paymentAmount) {
-        return redirect()->back()->with('error', 'Insufficient funds!');
+    public function show($control_number)
+    {
+        $booking = Booking::where('control_number', $control_number)->firstOrFail();
+        return view('bookings.show', compact('booking'));
     }
-
-    // Deduct the payment amount from the user's balance
-    $newBalance = $userBalance - $paymentAmount;
-    $currentUser->balance = $newBalance;
-    $currentUser->save();
-
-    // Update the booking's payment status
-    if ($booking->price == $paymentAmount) {
-        $booking->payment_status = 'paid';
-    } else {
-        return redirect()->back()->with('error', 'Incomplete transaction');
-    }
-
-    $booking->save();
-
-    return redirect()->back()->with('success', 'Payment submitted successfully!');
-}
-
-   
 }

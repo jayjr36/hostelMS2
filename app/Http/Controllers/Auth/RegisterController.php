@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 class RegisterController extends Controller
 {
@@ -35,6 +37,17 @@ class RegisterController extends Controller
      *
      * @return void
      */
+
+
+     protected function redirectTo()
+     {
+         if (Auth::user()->role == 'admin') {
+             return '/admin/home'; 
+         }else{
+             return '/home';
+         }
+     }
+
     public function __construct()
     {
         $this->middleware('guest');
@@ -50,6 +63,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'reg_number' => ['required', 'string'],
             'phone' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -66,6 +80,7 @@ class RegisterController extends Controller
     {
         return User::create([
             'name' => $data['name'],
+            'reg_number' => $data['reg_number'],
             'phone' => $data['phone'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
