@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -85,4 +86,25 @@ class BookingController extends Controller
         $booking = Booking::where('control_number', $control_number)->firstOrFail();
         return view('bookings.show', compact('booking'));
     }
+    public function showBookings()
+{
+    try {
+        $userRegNumber = auth()->user()->reg_number;
+
+        $student = Student::where('reg_number', $userRegNumber)->firstOrFail();
+
+        $bookings = Booking::where('student_id', $student->id)->get();
+
+        return view('bookings.booking', compact('bookings'));
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        
+        $errorMessage = 'Student not found. Please check your registration number.';
+    } catch (\Exception $e) {
+        $errorMessage = 'An error occurred while fetching bookings. Please try again later.';
+    }
+
+    return response()->view('layouts.error', ['errorMessage' => $errorMessage]);
+}
+
+    
 }

@@ -18,7 +18,7 @@
                             <a class="nav-link text-white fs-5" href="{{ route('hostels.index') }}" target="iframe">Hostels</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white fs-5" href="{{ route('student.bookings') }}" target="iframe">Bookings</a>
+                            <a class="nav-link text-white fs-5" href="{{ route('show.bookings') }}" target="iframe">Bookings</a>
                         </li>
                         <li class="nav-item">
                             @auth

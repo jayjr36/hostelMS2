@@ -47,12 +47,11 @@ class StudentController extends Controller
             'address' => 'required',
             'parents_guardian_name' => 'required',
             'parents_guardian_phone' => 'required',
-            'year_enrolled' => 'required|integer',
         ]);
 
         Student::create($request->all());
 
-        return redirect()->route('admin.students.index')->with('success', 'Student registered successfully.');
+        return redirect()->route('admin.students')->with('success', 'Student registered successfully.');
     }
 
     public function show($reg_number)

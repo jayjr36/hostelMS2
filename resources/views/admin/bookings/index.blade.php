@@ -12,6 +12,7 @@
         <thead>
             <tr>
                 <th>Booking ID</th>
+                <th>Hostel</th>
                 <th>Student Name</th>
                 <th>Registration Number</th>
                 <th>Room Number</th>
@@ -24,6 +25,7 @@
             @foreach ($bookings as $booking)
                 <tr>
                     <td>{{ $booking->id }}</td>
+                    <td>{{ $booking->hostel}}</td>
                     <td>{{ $booking->student->name }}</td>
                     <td>{{ $booking->student->reg_number }}</td>
                     <td>{{ $booking->room_number }}</td>

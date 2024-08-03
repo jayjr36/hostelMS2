@@ -22,7 +22,6 @@ return new class extends Migration
             $table->text('address');
             $table->string('parents_guardian_name');
             $table->string('parents_guardian_phone');
-            $table->integer('year_enrolled');
             $table->timestamps();
         });
     }

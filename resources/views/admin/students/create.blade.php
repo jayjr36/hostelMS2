@@ -57,10 +57,6 @@
                     <label for="parents_guardian_phone">Parents/Guardian Phone</label>
                     <input type="text" name="parents_guardian_phone" class="form-control" required>
                 </div>
-                <div class="form-group">
-                    <label for="year_enrolled">Year Enrolled</label>
-                    <input type="number" name="year_enrolled" class="form-control" required>
-                </div>
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>

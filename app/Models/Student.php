@@ -19,7 +19,6 @@ class Student extends Model
         'address',
         'parents_guardian_name',
         'parents_guardian_phone',
-        'year_enrolled',
     ];
 
     public function booking()

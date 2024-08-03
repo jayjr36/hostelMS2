@@ -50,7 +50,7 @@ Route::get('bookings/{control_number}', [BookingController::class, 'show'])->nam
 Route::get('students/{reg_number}', [StudentController::class, 'show']);
 Route::post('students/register', [StudentController::class, 'store'])->name('admin.students.store');
 
-
+Route::get('/student/bookings/placed', [BookingController::class, 'showBookings'])->name('show.bookings');
 
 Route::get('/admin/students', [AdminController::class, 'students'])->name('admin.students');
 Route::get('/admin/students/edit/{id}', [AdminController::class, 'editStudent'])->name('admin.students.edit');
